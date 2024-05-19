@@ -85,6 +85,7 @@ public class user_mainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(user_mainActivity.this, MainActivity.class);
+                intent.putExtra("USER_ID", userId);
                 startActivity(intent);
             }
         });

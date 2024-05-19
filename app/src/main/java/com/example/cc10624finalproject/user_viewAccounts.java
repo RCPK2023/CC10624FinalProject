@@ -84,8 +84,11 @@ public class user_viewAccounts extends AppCompatActivity {
                 if (userId != -1) {
                     dbHandler.setCurrentUser(user_viewAccounts.this, userId);
                     Intent intent = new Intent(user_viewAccounts.this, user_mainActivity.class);
+
                     startActivity(intent);
+
                     dialog.dismiss();
+
                 } else {
                     Toast.makeText(user_viewAccounts.this, "Incorrect password", Toast.LENGTH_SHORT).show();
                 }

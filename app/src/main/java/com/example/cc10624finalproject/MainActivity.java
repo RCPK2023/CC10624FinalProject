@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,6 +20,10 @@ public class MainActivity extends AppCompatActivity {
     private Button viewAccount;
     private TextView playerName;
     private DBHandler dbHandler;
+    private int userId = -1;
+    private static final String PREF_NAME = "UserPref";
+    private static final String KEY_CURRENT_USER_ID = "currentUserId";
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,27 +85,50 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.containsKey("USER_ID")) {
+            userId = extras.getInt("USER_ID", -1);
+            if (userId != -1) {
+                dbHandler.setCurrentUser(this, userId);
+            }
+        } else {
+
+            userId = dbHandler.getCurrentUser(this);
+        }
+
+
         checkExistingPlayer();
     }
 
     private void checkExistingPlayer() {
         isExistingPlayer = dbHandler.hasExistingPlayer();
         if (isExistingPlayer) {
-            int mostRecentUserId = dbHandler.getMostRecentUserId();
-            dbHandler.setCurrentUser(this, mostRecentUserId);
-            User currentUser = dbHandler.getUserById(mostRecentUserId);
-            if (currentUser != null) {
-                playerName.setText(currentUser.getName());
+            if (userId == -1) {
+                userId = dbHandler.getCurrentUser(this);
+            }
+
+            if (userId != -1) {
+                User currentUser = dbHandler.getUserById(userId);
+                if (currentUser != null) {
+                    playerName.setText(currentUser.getName());
+                }
+            } else {
+                int mostRecentUserId = dbHandler.getMostRecentUserId();
+                dbHandler.setCurrentUser(this, mostRecentUserId);
+                User currentUser = dbHandler.getUserById(mostRecentUserId);
+                if (currentUser != null) {
+                    playerName.setText(currentUser.getName());
+                }
             }
             viewAccount.setVisibility(View.VISIBLE);
         } else {
             viewAccount.setVisibility(View.GONE);
-
             playerName.setText("");
             showCreateAccountDialog();
         }
-    }
 
+    }
 
     private void showCreateAccountDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

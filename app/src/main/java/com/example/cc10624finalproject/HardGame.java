@@ -40,10 +40,10 @@ public class HardGame extends AppCompatActivity {
     private int calculateScore(long elapsedTimeSeconds, int mistakes) {
         int timeScore;
         // Score based on time
-        if (elapsedTimeSeconds <= 30) {
-            timeScore = 3;
-        } else if (elapsedTimeSeconds <= 60) {
-            timeScore = 2;
+        if (elapsedTimeSeconds <= 40) {
+            timeScore = 10;
+        } else if (elapsedTimeSeconds <= 70) {
+            timeScore = 5;
         } else {
             timeScore = 1;
         }
@@ -51,11 +51,11 @@ public class HardGame extends AppCompatActivity {
         int mistakesScore;
         // Score based on mistakes
         if (mistakes <= 30) {
-            mistakesScore = 3;
-        } else if (mistakes <= 60) {
-            mistakesScore = 2;
+            mistakesScore = 15;
+        } else if (mistakes <= 70) {
+            mistakesScore = 10;
         } else {
-            mistakesScore = 1;
+            mistakesScore = 5;
         }
 
         // Combine time and mistakes scores

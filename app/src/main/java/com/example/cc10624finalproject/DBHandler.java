@@ -100,14 +100,19 @@ public class DBHandler extends SQLiteOpenHelper {
 
         // Create the query
         String query = "SELECT u." + COLUMN_USER_ID + ", u." + COLUMN_NAME + ", u." + COLUMN_PASSWORD +
-                ", s." + COLUMN_SCORE_ID + ", s." + COLUMN_TIME + ", s." + COLUMN_DIFFICULTY + ", s." + COLUMN_SCORE +
+                ", s." + COLUMN_SCORE_ID + ", s." + COLUMN_TIME + ", s." + COLUMN_DIFFICULTY + ", s." + COLUMN_SCORE + ", top_score" +
                 " FROM " + TABLE_USER + " u" +
                 " JOIN " + TABLE_USER_SCORE + " us ON u." + COLUMN_USER_ID + " = us." + COLUMN_USER_ID +
-                " JOIN " + TABLE_SCORE + " s ON us." + COLUMN_SCORE_ID + " = s." + COLUMN_SCORE_ID +
+                " JOIN (" +
+                "     SELECT " + COLUMN_SCORE_ID + ", " + COLUMN_TIME + ", " + COLUMN_DIFFICULTY + ", " + COLUMN_SCORE + ", MAX(" + COLUMN_SCORE + ") as top_score" +
+                "     FROM " + TABLE_SCORE +
+                "     GROUP BY " + COLUMN_SCORE_ID + ", " + COLUMN_TIME + ", " + COLUMN_DIFFICULTY + ", " + COLUMN_SCORE +
+                " ) as s ON s." + COLUMN_SCORE_ID + " = us." + COLUMN_SCORE_ID +
                 " WHERE s." + COLUMN_DIFFICULTY + " IN ('Normal', 'Hard')" +
-                " GROUP BY u." + COLUMN_USER_ID + ", s." + COLUMN_DIFFICULTY +
-                " ORDER BY s." + COLUMN_DIFFICULTY + " DESC, s." + COLUMN_SCORE + " DESC, s." + COLUMN_TIME + " ASC" +
+                " ORDER BY CASE WHEN s." + COLUMN_DIFFICULTY + " = 'Normal' THEN 1 ELSE 2 END, top_score DESC, s." + COLUMN_TIME + " ASC" +
                 " LIMIT " + (limitPerDifficulty * 2);
+
+
 
         Cursor cursor = db.rawQuery(query, null);
 
@@ -322,7 +327,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public int getMostRecentUserId() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT " + COLUMN_USER_ID + " FROM " + TABLE_USER + " ORDER BY " + COLUMN_USER_ID + " DESC LIMIT 1";
+        String query = "SELECT " + COLUMN_USER_ID + " FROM " + TABLE_USER + " ORDER BY " + COLUMN_USER_ID + " ASC LIMIT 1";
         Cursor cursor = db.rawQuery(query, null);
         int userId = -1;
         if (cursor.moveToFirst()) {

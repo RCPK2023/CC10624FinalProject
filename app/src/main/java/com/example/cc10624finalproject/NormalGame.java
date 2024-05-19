@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,11 +38,12 @@ public class NormalGame extends AppCompatActivity {
     //Calculates score
     private int calculateScore(long elapsedTimeSeconds, int mistakes) {
         int timeScore;
+        int completionScore = 14;
         // Score based on time
-        if (elapsedTimeSeconds <= 10) {
-            timeScore = 3;
+        if (elapsedTimeSeconds <= 15) {
+            timeScore = 10;
         } else if (elapsedTimeSeconds <= 20) {
-            timeScore = 2;
+            timeScore = 5;
         } else {
             timeScore = 1;
         }
@@ -49,15 +51,15 @@ public class NormalGame extends AppCompatActivity {
         int mistakesScore;
         // Score based on mistakes
         if (mistakes <= 15) {
-            mistakesScore = 3;
+            mistakesScore = 15;
         } else if (mistakes <= 20) {
-            mistakesScore = 2;
+            mistakesScore = 10;
         } else {
-            mistakesScore = 1;
+            mistakesScore = 5;
         }
 
         // Combine time and mistakes scores
-        return timeScore + mistakesScore;
+        return timeScore + mistakesScore + completionScore;
     }
 
     // Game is finished

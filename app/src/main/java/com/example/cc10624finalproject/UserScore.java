@@ -79,7 +79,7 @@ public class UserScore {
 
     @Override
     public String toString() {
-        return String.format("%-15s %-20s %-20d %-20d", getName(), getDifficulty(), getTime(), getScore());
+        return String.format("%-15s %-15s %-20d %-20d", getName(), getDifficulty(), getTime(), getScore());
     }
 
 
