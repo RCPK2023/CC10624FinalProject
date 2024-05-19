@@ -12,8 +12,6 @@ public class Score {
         this.score = score;
     }
 
-
-
     public int getTime() {
         return time;
     }
@@ -27,7 +25,7 @@ public class Score {
     }
 
     public void setDifficulty(String difficulty) {
-        difficulty = difficulty;
+        this.difficulty = difficulty;
     }
 
     public int getScore() {
@@ -38,7 +36,9 @@ public class Score {
         this.score = score;
     }
 
-
-
+    @Override
+    public String toString() {
+        return String.format("%-25s %-25d %-10d", difficulty, time, score);
+    }
 
 }

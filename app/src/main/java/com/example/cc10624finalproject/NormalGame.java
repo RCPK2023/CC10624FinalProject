@@ -77,7 +77,8 @@ public class NormalGame extends AppCompatActivity {
 
             Score score = new Score(time, difficulty, normalScore);
             DBHandler dbHandler = new DBHandler(this);
-            dbHandler.addScore(score);
+            int userId = dbHandler.getCurrentUser(this);
+            dbHandler.addScore(userId, score);
 
             // Says congrats to the congrats to the player
             showAlertDialog("Your time was: " + elapsedTimeSeconds + " Seconds");
